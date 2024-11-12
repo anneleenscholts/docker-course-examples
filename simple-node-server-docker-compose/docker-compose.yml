@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://user:password@db:5432/mydatabase  # Database verbinding
+      - NAME=Anneleen
+    depends_on:
+      - db
+    restart: unless-stopped  # Herstart webserver indien deze onverwacht stopt
+
+  db:
+    # ports:
+    #   - "5432:5432"
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydatabase
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: unless-stopped  # Herstart de database indien deze onverwacht stopt
+
+volumes:
+  db_data:
